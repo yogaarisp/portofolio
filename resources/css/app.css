@@ -1,0 +1,130 @@
+@import "tailwindcss";
+
+@theme {
+  /* Deep Teal Palette */
+  --color-primary-50:  #f0fdfa;
+  --color-primary-100: #ccfbf1;
+  --color-primary-200: #99f6e4;
+  --color-primary-300: #5eead4;
+  --color-primary-400: #2dd4bf;
+  --color-primary-500: #14b8a6;
+  --color-primary-600: #0d9488;
+  --color-primary-700: #0f766e;
+  --color-primary-800: #115e59;
+  --color-primary-900: #134e4a;
+
+  /* Surface */
+  --color-surface: #F8FAFC;
+
+  /* Typography */
+  --font-sans: "Manrope", system-ui, sans-serif;
+
+  /* Border radius tokens (24px = 1.5rem) */
+  --radius-section: 1.5rem;
+  --radius-card: 1.5rem;
+  --radius-btn: 9999px;
+  --radius-icon: 1rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--color-surface);
+    color: #1e293b;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    background-color: var(--color-primary-600);
+    color: #fff;
+    padding: 1rem 2rem;
+    border-radius: var(--radius-btn);
+    font-weight: 700;
+    font-size: 1rem;
+    display: inline-block;
+    transition: all 0.2s ease;
+    box-shadow: 0 10px 25px -5px color-mix(in srgb, var(--color-primary-600) 40%, transparent);
+    text-decoration: none;
+    text-align: center;
+  }
+  .btn-primary:hover {
+    background-color: var(--color-primary-700);
+    transform: translateY(-2px);
+    box-shadow: 0 20px 30px -8px color-mix(in srgb, var(--color-primary-600) 45%, transparent);
+  }
+
+  .btn-secondary {
+    background-color: #fff;
+    color: #1e293b;
+    border: 1.5px solid #e2e8f0;
+    padding: 1rem 2rem;
+    border-radius: var(--radius-btn);
+    font-weight: 700;
+    font-size: 1rem;
+    display: inline-block;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    text-align: center;
+  }
+  .btn-secondary:hover {
+    background-color: var(--color-primary-50);
+    border-color: var(--color-primary-300);
+    transform: translateY(-2px);
+  }
+
+  .card {
+    background-color: #fff;
+    border-radius: var(--radius-card);
+    border: 1.5px solid #f1f5f9;
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,0.05);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    overflow: hidden;
+  }
+  .card:hover {
+    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.12);
+    transform: translateY(-6px);
+  }
+
+  .section-label {
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-primary-600);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.1;
+  }
+
+  .skill-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #475569;
+    font-size: 0.95rem;
+    padding: 0.5rem 0;
+  }
+
+  .skill-badge::before {
+    content: '';
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--color-primary-500);
+    flex-shrink: 0;
+  }
+}
