@@ -3,7 +3,7 @@
         {{-- Logo --}}
         <a href="#hero" style="display:flex;align-items:center;gap:0.5rem;flex-shrink:0;text-decoration:none;">
             <span class="material-symbols-outlined" style="color:#0D9488;font-size:1.6rem;">terminal</span>
-            <span style="font-family:'Manrope',sans-serif;font-size:1.15rem;font-weight:800;color:#0D9488;white-space:nowrap;letter-spacing:-0.01em;">Yoga Aris Purwanto</span>
+            <span style="font-family:'Manrope',sans-serif;font-size:1.15rem;font-weight:800;color:#0D9488;white-space:nowrap;letter-spacing:-0.01em;">{{ $settings['site_name'] ?? 'Yoga Aris Purwanto' }}</span>
         </a>
         
         {{-- Desktop Nav --}}

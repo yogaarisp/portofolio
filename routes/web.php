@@ -15,8 +15,6 @@ Route::get('lang/{locale}', function ($locale) {
 });
 
 Route::get('/', function () {
-    app()->setLocale(session('locale', 'en'));
-
     $experiences = Experience::orderBy('sort_order')->get();
     $skills = Skill::orderBy('sort_order')->get()->groupBy('category');
     $projects = Project::where('status', 'published')->orderBy('sort_order')->get();
@@ -28,7 +26,16 @@ Route::get('/', function () {
     return view('welcome', compact('experiences', 'skills', 'projects', 'settings'));
 });
 
-Route::prefix('admin')->group(function () {
+use App\Http\Controllers\Auth\LoginController;
+
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+    Route::get('/', function() {
+        return redirect()->route('admin.dashboard');
+    });
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::get('/projects', [DashboardController::class, 'projects'])->name('admin.projects');
     Route::get('/skills', [DashboardController::class, 'skills'])->name('admin.skills');

@@ -100,6 +100,7 @@
 @media(min-width:900px){
     .hero-grid{grid-template-columns:1fr 1fr!important;gap:4rem!important;}
     .hero-text{order:1!important;}
+    .hero-text h1{white-space:nowrap!important;}
     .hero-desk-photo{order:2!important;display:flex!important;}
     .hero-mob-photo{display:none!important;}
 }
@@ -118,7 +119,7 @@
         <div style="text-align:center;max-width:700px;margin:0 auto 5rem;">
             <span style="font-size:0.85rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#0d9488;display:block;margin-bottom:0.75rem;">{{ __('Skills') }}</span>
             <h2 style="font-family:'Manrope',sans-serif;font-size:clamp(2.2rem,5vw,3.25rem);font-weight:800;color:#0f172a;line-height:1.1;margin-bottom:1.25rem;">{{ __('Core Competencies') }}</h2>
-            <p style="color:#64748b;font-size:1.1rem;line-height:1.75;">{{ __('Skills') }} IT komprehensif yang memadukan manajemen infrastruktur yang kuat dengan inovasi perangkat lunak modern.</p>
+            <p style="color:#64748b;font-size:1.1rem;line-height:1.75;">{{ __('IT comprehensive skills that blend robust infrastructure management with modern software innovation.') }}</p>
         </div>
         
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:2.5rem;">
@@ -263,54 +264,197 @@
 </section>
 
 {{-- PORTFOLIO --}}
-<section id="portfolio" style="padding:4rem 0;background:#fff;position:relative;">
+<section id="portfolio" style="padding:4rem 0;background:#fff;position:relative;" x-data="{ 
+    showProj: false, 
+    activeProj: {name:'', desc:'', tags:[], gradient:'', url:''},
+    openProj(name, desc, tags, gradient, url) {
+        this.activeProj = {name, desc, tags, gradient, url};
+        this.showProj = true;
+    }
+}" x-init="$watch('showProj', value => { document.body.style.overflow = value ? 'hidden' : 'auto'; })">
     <div style="max-width:1200px;margin:0 auto;padding:0 2rem;">
         <div style="text-align:center;max-width:700px;margin:0 auto 5rem;">
-            <span style="font-size:0.85rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#0d9488;display:block;margin-bottom:0.75rem;">Karya Pilihan</span>
-            <h2 style="font-family:'Manrope',sans-serif;font-size:clamp(2.2rem,5vw,3.25rem);font-weight:800;color:#0f172a;line-height:1.1;margin-bottom:1.25rem;">Proyek Unggulan</h2>
-            <p style="color:#64748b;font-size:1.1rem;line-height:1.75;">Kumpulan solusi IT kompleks, dari pengaturan infrastruktur yang kuat hingga sistem perangkat lunak khusus.</p>
+            <span style="font-size:0.85rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#0d9488;display:block;margin-bottom:0.75rem;">{{ __('Featured Work') }}</span>
+            <h2 style="font-family:'Manrope',sans-serif;font-size:clamp(2.2rem,5vw,3.25rem);font-weight:800;color:#0f172a;line-height:1.1;margin-bottom:1.25rem;">{{ __('Featured Projects') }}</h2>
+            <p style="color:#64748b;font-size:1.1rem;line-height:1.75;">{{ __('A collection of complex IT solutions, from robust infrastructure setups to custom software systems.') }}</p>
         </div>
         
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:3rem;">
-            @foreach($projects as $p)
-            <div class="card" style="transition:all 0.4s ease;" onmouseover="this.style.transform='translateY(-10px)';this.style.boxShadow='0 25px 50px -12px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 1px 4px 0 rgba(0,0,0,0.05)'">
-                <div style="height:220px;background:{{ $p->gradient }};display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
-                    <div style="position:absolute;inset:0;background:rgba(255,255,255,0.05);backdrop-filter:blur(2px);"></div>
-                    <svg style="width:80px;height:80px;color:rgba(255,255,255,0.7);z-index:1;" fill="none" stroke="currentColor" stroke-width="1.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z"/></svg>
-                </div>
-                <div style="padding:2.25rem;">
-                    <div style="display:flex;flex-wrap:wrap;gap:0.6rem;margin-bottom:1.25rem;">
-                        @foreach($p->tags ?? [] as $tag)
-                        <span style="font-size:0.75rem;font-weight:700;color:#0d9488;background:#f0fdfa;border:1px solid #99f6e4;padding:0.3rem 0.85rem;border-radius:9999px;">{{ $tag }}</span>
-                        @endforeach
+        <div x-data="{ 
+            atBeginning: true,
+            atEnd: false,
+            get activeIndex() {
+                if (!this.$refs.slider) return 0;
+                let scrollLeft = this.$refs.slider.scrollLeft;
+                let itemWidth = this.$refs.slider.firstElementChild.getBoundingClientRect().width + 32;
+                return Math.round(scrollLeft / itemWidth);
+            },
+            next() {
+                let itemWidth = this.$refs.slider.firstElementChild.getBoundingClientRect().width + 32;
+                this.$refs.slider.scrollBy({ left: itemWidth, behavior: 'smooth' });
+            },
+            prev() {
+                let itemWidth = this.$refs.slider.firstElementChild.getBoundingClientRect().width + 32;
+                this.$refs.slider.scrollBy({ left: -itemWidth, behavior: 'smooth' });
+            },
+            update() {
+                this.atBeginning = this.$refs.slider.scrollLeft <= 20;
+                this.atEnd = (this.$refs.slider.scrollLeft + this.$refs.slider.offsetWidth) >= (this.$refs.slider.scrollWidth - 20);
+            }
+        }" style="position:relative;">
+            
+            {{-- Carousel Track --}}
+            <div 
+                x-ref="slider"
+                @scroll.debounce.15ms="update()"
+                class="no-scrollbar"
+                style="display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:2rem;padding-bottom:3rem;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;margin:0 -1rem;padding:0 1rem 3rem;"
+            >
+                @foreach($projects as $p)
+                <div style="flex:0 0 85%;scroll-snap-align:center;max-width:380px;">
+                    <div class="card" 
+                        style="height:100%;display:flex;flex-direction:column;background:#fff;border-radius:1.5rem;overflow:hidden;border:1px solid #f1f5f9;transition:all 0.4s ease;cursor:pointer;" 
+                        onmouseover="this.style.transform='translateY(-10px)';this.style.boxShadow='0 20px 40px rgba(0,0,0,0.1)'" 
+                        onmouseout="this.style.transform='none';this.style.boxShadow='none'"
+                        @click="openProj({{ Js::from(__($p->name)) }}, {{ Js::from(__($p->description)) }}, {{ Js::from($p->tags ?? []) }}, {{ Js::from($p->gradient) }}, {{ Js::from($p->url ?? '#') }})">
+                        <div style="height:200px;background:{{ $p->gradient }};display:flex;align-items:center;justify-content:center;position:relative;">
+                            <div style="position:absolute;inset:0;background:rgba(0,0,0,0.03);"></div>
+                            <svg style="width:60px;height:60px;color:rgba(255,255,255,0.8);z-index:1;" fill="none" stroke="currentColor" stroke-width="1.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z"/></svg>
+                        </div>
+                        <div style="padding:2rem;flex:1;display:flex;flex-direction:column;">
+                            <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.25rem;">
+                                @foreach($p->tags ?? [] as $tag)
+                                <span style="font-size:0.7rem;font-weight:800;color:#0d9488;background:#f0fdfa;padding:0.3rem 0.75rem;border-radius:0.5rem;border:1px solid #ccfbf1;text-transform:uppercase;">{{ $tag }}</span>
+                                @endforeach
+                            </div>
+                            <h3 style="font-family:'Manrope',sans-serif;font-size:1.3rem;font-weight:800;color:#0f172a;margin-bottom:0.75rem;line-height:1.2;">{{ __($p->name) }}</h3>
+                            <p style="font-size:0.95rem;color:#64748b;line-height:1.6;margin-bottom:1.75rem;flex:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">{{ __($p->description) }}</p>
+                            <div style="font-weight:800;color:#0d9488;font-size:0.95rem;display:inline-flex;align-items:center;gap:0.6rem;">
+                                {{ __('View Details') }}
+                                <svg style="width:18px;height:18px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+                            </div>
+                        </div>
                     </div>
-                    <h3 style="font-family:'Manrope',sans-serif;font-size:1.4rem;font-weight:800;color:#0f172a;margin-bottom:0.75rem;">{{ __($p->name) }}</h3>
-                    <p style="font-size:1rem;color:#64748b;line-height:1.7;margin-bottom:1.75rem;">{{ __($p->description) }}</p>
-                    <a href="{{ $p->url ?? '#' }}" style="font-weight:700;color:#0d9488;font-size:1rem;display:inline-flex;align-items:center;gap:0.5rem;text-decoration:none;transition:gap 0.2s;" onmouseover="this.style.gap='0.75rem'" onmouseout="this.style.gap='0.5rem'">
-                        {{ __('View Details') }}
-                        <svg style="width:18px;height:18px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
-                    </a>
+                </div>
+                @endforeach
+            </div>
+
+            {{-- Controls --}}
+            <div style="display:flex;flex-direction:column;align-items:center;gap:1.5rem;margin-top:1rem;">
+                {{-- Dots --}}
+                <div style="display:flex;gap:0.5rem;">
+                    @foreach($projects as $index => $p)
+                    <div 
+                        class="dot"
+                        :style="activeIndex == {{ $index }} ? 'width:2rem;background:#0d9488' : 'width:0.5rem;background:#e2e8f0'"
+                        style="height:0.5rem;border-radius:9999px;transition:all 0.3s ease;"
+                    ></div>
+                    @endforeach
+                </div>
+
+                {{-- Buttons --}}
+                <div style="display:flex;gap:1rem;">
+                    <button 
+                        @click="prev()" 
+                        :style="atBeginning ? 'opacity:0.3;cursor:not-allowed' : 'opacity:1;cursor:pointer'"
+                        style="width:3rem;height:3rem;border-radius:1rem;background:#fff;border:2px solid #f1f5f9;color:#64748b;display:flex;align-items:center;justify-content:center;transition:all 0.2s;"
+                        onmouseover="if(this.style.opacity!='0.3') { this.style.borderColor='#0d9488'; this.style.color='#0d9488'; }"
+                        onmouseout="this.style.borderColor='#f1f5f9'; this.style.color='#64748b';"
+                    >
+                        <svg style="width:20px;height:20px;" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                    </button>
+                    <button 
+                        @click="next()" 
+                        :style="atEnd ? 'opacity:0.3;cursor:not-allowed' : 'opacity:1;cursor:pointer'"
+                        style="width:3rem;height:3rem;border-radius:1rem;background:#fff;border:2px solid #f1f5f9;color:#64748b;display:flex;align-items:center;justify-content:center;transition:all 0.2s;"
+                        onmouseover="if(this.style.opacity!='0.3') { this.style.borderColor='#0d9488'; this.style.color='#0d9488'; }"
+                        onmouseout="this.style.borderColor='#f1f5f9'; this.style.color='#64748b';"
+                    >
+                        <svg style="width:20px;height:20px;" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                    </button>
                 </div>
             </div>
-            @endforeach
         </div>
     </div>
+
+    {{-- Project Detail Modal --}}
+    <template x-teleport="body">
+        <div x-show="showProj" x-cloak class="fixed inset-0 flex items-center justify-center p-4 sm:p-6" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 99999;">
+            {{-- Backdrop --}}
+            <div x-show="showProj" 
+                x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" 
+                x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" 
+                @click="showProj = false" 
+                class="absolute inset-0 bg-slate-900/40 backdrop-blur-md" style="z-index: -1;"></div>
+            
+            {{-- Modal Content --}}
+            <div x-show="showProj" 
+                x-transition:enter="ease-out duration-400" x-transition:enter-start="opacity-0 scale-95 translate-y-8" x-transition:enter-end="opacity-100 scale-100 translate-y-0" 
+                x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 scale-100 translate-y-0" x-transition:leave-end="opacity-0 scale-95 translate-y-4" 
+                class="relative bg-white rounded-[2.5rem] w-full max-w-2xl shadow-2xl flex flex-col max-h-[90vh] mx-auto my-auto overflow-hidden">
+                
+                <div class="p-8 sm:p-10 overflow-y-auto relative z-10 custom-scrollbar flex-1">
+                    {{-- Header Accent --}}
+                    <div :style="'background:' + activeProj.gradient" style="position:absolute;top:0;left:0;right:0;height:6px;opacity:0.8;"></div>
+
+                    <div class="flex justify-between items-start gap-4 mb-8 pt-2">
+                        <div>
+                            <h3 class="font-black text-slate-900 text-2xl sm:text-3xl tracking-tight leading-tight uppercase" x-text="activeProj.name"></h3>
+                            <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.75rem;">
+                                <template x-for="tag in activeProj.tags" :key="tag">
+                                    <span style="font-size:0.65rem;font-weight:800;color:#0d9488;background:#f0fdfa;padding:0.25rem 0.75rem;border-radius:0.5rem;border:1px solid #ccfbf1;text-transform:uppercase;" x-text="tag"></span>
+                                </template>
+                            </div>
+                        </div>
+                        <button @click="showProj = false" class="w-10 h-10 flex items-center justify-center rounded-full bg-slate-50 text-slate-400 hover:bg-rose-50 hover:text-rose-500 transition-all flex-shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
+                    </div>
+
+                    {{-- Description Section --}}
+                    <div class="mb-10">
+                        <h4 class="text-[0.7rem] font-black text-primary-600 uppercase tracking-widest mb-4 flex items-center gap-3">
+                            <span class="w-6 h-px bg-primary-200"></span>
+                            {{ __('Project Overview') }}
+                        </h4>
+                        <p class="text-slate-500 font-medium leading-relaxed text-lg" style="white-space:pre-wrap;" x-text="activeProj.desc"></p>
+                    </div>
+
+                    {{-- Action Footer --}}
+                    <div style="display:flex;gap:1rem;padding-top:2rem;border-top:1px solid #f1f5f9;">
+                        <a :href="activeProj.url" target="_blank" style="flex:2;background:#0d9488;color:#fff;text-align:center;padding:1.1rem;border-radius:1.25rem;font-weight:800;font-size:0.95rem;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:0.75rem;box-shadow:0 10px 25px rgba(13,148,136,0.25);">
+                            <svg style="width:18px;height:18px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+                            {{ __('Visit Live Project') }}
+                        </a>
+                        <button @click="showProj = false" style="flex:1;background:#f8fafc;color:#475569;text-align:center;padding:1.1rem;border-radius:1.25rem;font-weight:800;font-size:0.95rem;border:1px solid #e2e8f0;cursor:pointer;">
+                            {{ __('Close') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
 </section>
 
 {{-- CONTACT --}}
 <section id="contact" style="padding:4rem 0;background:linear-gradient(135deg,#0f766e,#0d9488 50%,#0ea5e9);">
     <div style="max-width:680px;margin:0 auto;padding:0 2rem;text-align:center;">
         <span style="font-size:0.78rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#99f6e4;display:block;margin-bottom:0.5rem;">{{ __('Let\'s Connect') }}</span>
-        <h2 style="font-size:clamp(2rem,4vw,3rem);font-weight:900;color:#fff;line-height:1.1;margin-bottom:1.25rem;">Punya Proyek dalam Pikiran?</h2>
-        <p style="color:#99f6e4;font-size:1.05rem;line-height:1.7;margin-bottom:2.5rem;">Baik itu infrastruktur, pengembangan perangkat lunak, atau rekayasa jaringan — Saya ingin membantu Anda menyelesaikannya.</p>
+        <h2 style="font-size:clamp(2rem,4vw,3rem);font-weight:900;color:#fff;line-height:1.1;margin-bottom:1.25rem;">{{ __('Got a Project in Mind?') }}</h2>
+        <p style="color:#99f6e4;font-size:1.05rem;line-height:1.7;margin-bottom:2.5rem;">{{ __('Whether it\'s infrastructure, software development, or network engineering — I\'d love to help you get it done.') }}</p>
         <div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;">
             <a href="mailto:{{ $settings['contact_email'] ?? 'yoga@example.com' }}" style="background:#fff;color:#0d9488;padding:0.9rem 1.9rem;border-radius:9999px;font-weight:800;font-size:0.95rem;text-decoration:none;display:inline-flex;align-items:center;gap:0.55rem;box-shadow:0 10px 30px rgba(0,0,0,0.15);transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
                 <svg style="width:18px;height:18px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
                 {{ __('Send Email') }}
             </a>
+            @if(!empty($settings['whatsapp_number']))
+            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings['whatsapp_number']) }}" target="_blank" style="background:#25d366;color:#fff;padding:0.9rem 1.9rem;border-radius:9999px;font-weight:800;font-size:0.95rem;text-decoration:none;display:inline-flex;align-items:center;gap:0.55rem;box-shadow:0 10px 30px rgba(37,211,102,0.2);transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+                <svg style="width:18px;height:18px;" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.313 1.592 5.448 0 9.886-4.438 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.438-9.89 9.886-.001 2.106.635 3.557 1.684 5.365l-1.012 3.7 3.897-1.021zm11.238-7.834c.303.151.303.454.151.758-.151.302-.605.454-1.059.605-.454.151-.908.303-1.362.454-1.512.605-2.571-1.21-3.025-1.512-.454-.303-.908-.454-1.21-.605-.303-.151-.605-.303-.908-.454-.303-.151-.605-.303-.454-.454s.151-.303.454-.454c.303-.151.605-.303.908-.454.303-.151.605-.151.757-.151s.303.151.303.454c.151.303.605 1.512.605 1.664.001.151.151.303 0 .454-.151.151-.303.303-.454.454-.151.151-.303.303-.151.454.303.454 1.21 2.118 2.723 2.572.454.151.908.151 1.21 0 .303-.151.605-.605.757-1.059.151-.454.454-.757.605-.757.151 0 .454.151.908.303z"/></svg>
+                WhatsApp
+            </a>
+            @endif
             <a href="{{ $settings['linkedin_url'] ?? 'https://linkedin.com' }}" target="_blank" style="background:rgba(255,255,255,0.15);color:#fff;padding:0.9rem 1.9rem;border-radius:9999px;font-weight:800;font-size:0.95rem;text-decoration:none;border:2px solid rgba(255,255,255,0.4);display:inline-flex;align-items:center;gap:0.55rem;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">
                 <svg style="width:18px;height:18px;" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                LinkedIn
+                {{ __('LinkedIn') }}
             </a>
         </div>
     </div>
@@ -335,9 +479,24 @@
 
         {{-- Copyright --}}
         <div style="color:#64748b;font-size:0.9rem;font-weight:500;">
-            &copy; {{ date('Y') }} Yoga Aris Purwanto. Hak cipta dilindungi undang-undang.
+            &copy; {{ date('Y') }} {{ $settings['site_name'] ?? 'Yoga Aris Purwanto' }}. {{ __('All rights reserved.') }}
         </div>
     </div>
 </footer>
+
+@if(!empty($settings['whatsapp_number']))
+<a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings['whatsapp_number']) }}" 
+   target="_blank" 
+   style="position:fixed;bottom:2rem;right:2rem;z-index:9999;width:3.5rem;height:3.5rem;background:#25d366;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 25px rgba(37,211,102,0.4);transition:all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);text-decoration:none;"
+   onmouseover="this.style.transform='scale(1.1) translateY(-5px)';this.style.boxShadow='0 15px 35px rgba(37,211,102,0.5)';"
+   onmouseout="this.style.transform='scale(1) translateY(0)';this.style.boxShadow='0 10px 25px rgba(37,211,102,0.4)';"
+>
+    <svg style="width:28px;height:28px;" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.313 1.592 5.448 0 9.886-4.438 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.438-9.89 9.886-.001 2.106.635 3.557 1.684 5.365l-1.012 3.7 3.897-1.021zm11.238-7.834c.303.151.303.454.151.758-.151.302-.605.454-1.059.605-.454.151-.908.303-1.362.454-1.512.605-2.571-1.21-3.025-1.512-.454-.303-.908-.454-1.21-.605-.303-.151-.605-.303-.908-.454-.303-.151-.454-.303-.454-.454s.151-.303.454-.454c.303-.151.605-.303.908-.454.303-.151.605-.303.908-.454.303-.151.605-.151.757-.151s.303.151.303.454c.151.303.605 1.512.605 1.664.001.151.151.303 0 .454-.151.151-.303.303-.454.454-.151.151-.303.303-.151.454.303.454 1.21 2.118 2.723 2.572.454.151.908.151 1.21 0 .303-.151.605-.605.757-1.059.151-.454.454-.757.605-.757.151 0 .454.151.908.303z"/></svg>
+</a>
+@endif
+
+@livewireScripts
+</body>
+</html>
 
 @endsection

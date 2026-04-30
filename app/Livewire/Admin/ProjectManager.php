@@ -5,12 +5,12 @@ namespace App\Livewire\Admin;
 use Livewire\Component;
 use App\Models\Project;
 use Livewire\WithFileUploads;
+use Livewire\Attributes\Computed;
 
 class ProjectManager extends Component
 {
     use WithFileUploads;
 
-    public $projects;
     public $name, $description, $tags, $gradient, $url, $status, $sort_order;
     public $projectId;
     public $isEditing = false;
@@ -28,13 +28,13 @@ class ProjectManager extends Component
 
     public function mount()
     {
-        $this->loadProjects();
         $this->resetFields();
     }
 
-    public function loadProjects()
+    #[Computed]
+    public function projects()
     {
-        $this->projects = Project::orderBy('sort_order')->get();
+        return Project::orderBy('sort_order')->get();
     }
 
     public function resetFields()
@@ -48,6 +48,7 @@ class ProjectManager extends Component
         $this->sort_order = Project::max('sort_order') + 1;
         $this->projectId = null;
         $this->isEditing = false;
+        $this->resetValidation();
     }
 
     public function openModal()
@@ -86,13 +87,8 @@ class ProjectManager extends Component
             'sort_order' => $this->sort_order,
         ];
 
-        if ($this->isEditing) {
-            Project::find($this->projectId)->update($data);
-        } else {
-            Project::create($data);
-        }
+        Project::updateOrCreate(['id' => $this->projectId], $data);
 
-        $this->loadProjects();
         $this->showModal = false;
         $this->resetFields();
         
@@ -101,8 +97,7 @@ class ProjectManager extends Component
 
     public function delete($id)
     {
-        Project::find($id)->delete();
-        $this->loadProjects();
+        Project::findOrFail($id)->delete();
         session()->flash('message', 'Proyek dihapus!');
     }
 

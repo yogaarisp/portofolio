@@ -4,10 +4,10 @@ namespace App\Livewire\Admin;
 
 use Livewire\Component;
 use App\Models\Skill;
+use Livewire\Attributes\Computed;
 
 class SkillManager extends Component
 {
-    public $skills;
     public $name, $category, $icon_path, $color, $sort_order;
     public $skillId;
     public $isEditing = false;
@@ -23,13 +23,20 @@ class SkillManager extends Component
 
     public function mount()
     {
-        $this->loadSkills();
         $this->resetFields();
     }
 
-    public function loadSkills()
+    #[Computed]
+    public function skills()
     {
-        $this->skills = Skill::orderBy('category')->orderBy('sort_order')->get();
+        return Skill::orderBy('category')->orderBy('sort_order')->get();
+    }
+
+    #[Computed]
+    public function categories()
+    {
+        $cats = Skill::distinct()->pluck('category')->toArray();
+        return empty($cats) ? ['Hardware & Troubleshooting', 'Software Development', 'Network Infrastructure'] : $cats;
     }
 
     public function resetFields()
@@ -41,6 +48,7 @@ class SkillManager extends Component
         $this->sort_order = Skill::max('sort_order') + 1;
         $this->skillId = null;
         $this->isEditing = false;
+        $this->resetValidation();
     }
 
     public function openModal()
@@ -75,13 +83,8 @@ class SkillManager extends Component
             'sort_order' => $this->sort_order,
         ];
 
-        if ($this->isEditing) {
-            Skill::find($this->skillId)->update($data);
-        } else {
-            Skill::create($data);
-        }
+        Skill::updateOrCreate(['id' => $this->skillId], $data);
 
-        $this->loadSkills();
         $this->showModal = false;
         $this->resetFields();
         
@@ -90,8 +93,7 @@ class SkillManager extends Component
 
     public function delete($id)
     {
-        Skill::find($id)->delete();
-        $this->loadSkills();
+        Skill::findOrFail($id)->delete();
         session()->flash('message', 'Skill dihapus!');
     }
 

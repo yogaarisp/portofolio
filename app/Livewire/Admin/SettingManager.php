@@ -11,7 +11,7 @@ class SettingManager extends Component
     use WithFileUploads;
 
     public $settings = [];
-    public $site_name, $contact_email, $linkedin_url, $github_url, $hero_title, $hero_subtitle;
+    public $site_name, $contact_email, $linkedin_url, $github_url, $whatsapp_number, $hero_title, $hero_subtitle;
     public $years_experience, $projects_count, $client_satisfaction;
     public $hero_image, $favicon;
     public $hero_image_path, $favicon_path;
@@ -21,6 +21,7 @@ class SettingManager extends Component
         'contact_email' => 'required|email|max:255',
         'linkedin_url' => 'nullable|url',
         'github_url' => 'nullable|url',
+        'whatsapp_number' => 'nullable|string|max:20',
         'hero_title' => 'required|string|max:255',
         'hero_subtitle' => 'required|string',
         'years_experience' => 'nullable|string',
@@ -43,6 +44,7 @@ class SettingManager extends Component
         $this->contact_email = $dbSettings['contact_email'] ?? 'yoga@example.com';
         $this->linkedin_url = $dbSettings['linkedin_url'] ?? '';
         $this->github_url = $dbSettings['github_url'] ?? '';
+        $this->whatsapp_number = $dbSettings['whatsapp_number'] ?? '';
         $this->hero_title = $dbSettings['hero_title'] ?? 'Technical Support & System Developer';
         $this->hero_subtitle = $dbSettings['hero_subtitle'] ?? 'Spesialis dalam optimasi infrastruktur IT, manajemen jaringan, dan pengembangan sistem yang efisien.';
         $this->years_experience = $dbSettings['years_experience'] ?? '8+';
@@ -61,6 +63,7 @@ class SettingManager extends Component
             'contact_email' => $this->contact_email,
             'linkedin_url' => $this->linkedin_url,
             'github_url' => $this->github_url,
+            'whatsapp_number' => $this->whatsapp_number,
             'hero_title' => $this->hero_title,
             'hero_subtitle' => $this->hero_subtitle,
             'years_experience' => $this->years_experience,
@@ -76,11 +79,12 @@ class SettingManager extends Component
             $data['favicon_path'] = $this->favicon->store('settings', 'public');
         }
 
+        $upsertData = [];
         foreach ($data as $key => $value) {
-            $setting = Setting::firstOrNew(['key' => $key]);
-            $setting->value = $value;
-            $setting->save();
+            $upsertData[] = ['key' => $key, 'value' => $value ?? ''];
         }
+
+        Setting::upsert($upsertData, ['key'], ['value']);
 
         session()->flash('message', 'Pengaturan berhasil disimpan!');
     }

@@ -4,10 +4,10 @@ namespace App\Livewire\Admin;
 
 use Livewire\Component;
 use App\Models\Experience;
+use Livewire\Attributes\Computed;
 
 class ExperienceManager extends Component
 {
-    public $experiences;
     public $title, $company, $period, $description, $responsibilities = [], $dot_color, $badge_type, $is_current, $is_leadership, $sort_order;
     public $experienceId;
     public $isEditing = false;
@@ -28,13 +28,13 @@ class ExperienceManager extends Component
 
     public function mount()
     {
-        $this->loadExperiences();
         $this->resetFields();
     }
 
-    public function loadExperiences()
+    #[Computed]
+    public function experiences()
     {
-        $this->experiences = Experience::orderBy('sort_order')->get();
+        return Experience::orderBy('sort_order')->get();
     }
 
     public function resetFields()
@@ -51,6 +51,7 @@ class ExperienceManager extends Component
         $this->sort_order = Experience::max('sort_order') + 1;
         $this->experienceId = null;
         $this->isEditing = false;
+        $this->resetValidation();
     }
 
     public function openModal()
@@ -95,13 +96,8 @@ class ExperienceManager extends Component
             'sort_order' => $this->sort_order,
         ];
 
-        if ($this->isEditing) {
-            Experience::find($this->experienceId)->update($data);
-        } else {
-            Experience::create($data);
-        }
+        Experience::updateOrCreate(['id' => $this->experienceId], $data);
 
-        $this->loadExperiences();
         $this->showModal = false;
         $this->resetFields();
         
@@ -110,8 +106,7 @@ class ExperienceManager extends Component
 
     public function delete($id)
     {
-        Experience::find($id)->delete();
-        $this->loadExperiences();
+        Experience::findOrFail($id)->delete();
         session()->flash('message', 'Pengalaman dihapus!');
     }
 

@@ -1,10 +1,16 @@
 <div class="space-y-10">
-    <div class="flex items-center justify-between">
-        <div>
-            <h2 class="text-3xl font-black text-slate-900 tracking-tight leading-tight uppercase">Konfigurasi <span class="text-primary-600">Situs</span></h2>
-            <p class="text-slate-400 font-bold text-sm mt-2 tracking-wide">Atur identitas dan informasi kontak portfolio Anda.</p>
+    <div class="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+        <div class="flex items-start gap-4">
+            <div class="w-11 h-11 rounded-2xl bg-primary-50 text-primary-600 border border-primary-100 shadow-sm flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/></svg>
+            </div>
+            <div>
+                <p class="text-[0.62rem] font-black text-primary-600 uppercase tracking-[0.22em]">Admin Workspace</p>
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight mt-1">Konfigurasi <span class="text-primary-600">Situs</span></h2>
+                <p class="text-slate-400 font-bold text-sm mt-2 tracking-wide">Atur identitas dan informasi kontak portfolio Anda.</p>
+            </div>
         </div>
-        <button wire:click="save" class="bg-primary-600 text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-primary-700 transition-all shadow-xl shadow-primary-600/20 flex items-center gap-3">
+        <button wire:click="save" class="admin-btn-primary">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
             Simpan Perubahan
         </button>
@@ -17,10 +23,10 @@
         </div>
     @endif
 
-    <div class="grid grid-cols-1 xl:grid-cols-3 gap-10">
-        <div class="xl:col-span-2 space-y-10">
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 sm:gap-10">
+        <div class="xl:col-span-2 space-y-6 sm:space-y-10">
             <!-- General Settings -->
-            <div class="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-8">
+            <div class="bg-white p-5 sm:p-8 lg:p-10 rounded-[2rem] sm:rounded-[2.5rem] border border-slate-100 shadow-sm space-y-8">
                 <div class="flex items-center gap-4 mb-2">
                     <div class="w-10 h-10 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
@@ -66,7 +72,7 @@
             </div>
 
             <!-- Social Media -->
-            <div class="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-8">
+            <div class="bg-white p-5 sm:p-8 lg:p-10 rounded-[2rem] sm:rounded-[2.5rem] border border-slate-100 shadow-sm space-y-8">
                 <div class="flex items-center gap-4 mb-2">
                     <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
@@ -83,12 +89,21 @@
                         <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest px-1">GitHub URL</label>
                         <input type="text" wire:model="github_url" class="w-full bg-slate-50 border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold text-slate-700 focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all outline-none" placeholder="https://github.com/...">
                     </div>
+                    <div class="space-y-3 md:col-span-2">
+                        <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest px-1">Nomor WhatsApp (Gunakan Kode Negara, misal: 628123456789)</label>
+                        <div class="relative">
+                            <input type="text" wire:model="whatsapp_number" class="w-full bg-slate-50 border-slate-100 rounded-2xl pl-14 pr-6 py-4 text-sm font-bold text-slate-700 focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all outline-none" placeholder="628xxxxxxxx">
+                            <div class="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">
+                                <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.313 1.592 5.448 0 9.886-4.438 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.438-9.89 9.886-.001 2.106.635 3.557 1.684 5.365l-1.012 3.7 3.897-1.021zm11.238-7.834c.303.151.303.454.151.758-.151.302-.605.454-1.059.605-.454.151-.908.303-1.362.454-1.512.605-2.571-1.21-3.025-1.512-.454-.303-.908-.454-1.21-.605-.303-.151-.605-.303-.908-.454-.303-.151-.454-.303-.454-.454s.151-.303.454-.454c.303-.151.605-.303.908-.454.303-.151.605-.151.757-.151s.303.151.303.454c.151.303.605 1.512.605 1.664.001.151.151.303 0 .454-.151.151-.303.303-.454.454-.151.151-.303.303-.151.454.303.454 1.21 2.118 2.723 2.572.454.151.908.151 1.21 0 .303-.151.605-.605.757-1.059.151-.454.454-.757.605-.757.151 0 .454.151.908.303z"/></svg>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
             <!-- Media & Assets -->
-            <div class="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-8">
+            <div class="bg-white p-5 sm:p-8 lg:p-10 rounded-[2rem] sm:rounded-[2.5rem] border border-slate-100 shadow-sm space-y-8">
                 <div class="flex items-center gap-4 mb-2">
                     <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
@@ -144,9 +159,9 @@
             </div>
         </div>
 
-        <div class="space-y-10">
+        <div class="space-y-6 sm:space-y-10">
             <!-- Information Box -->
-            <div class="bg-gradient-to-br from-slate-900 to-slate-800 p-10 rounded-[2.5rem] text-white shadow-2xl relative overflow-hidden">
+            <div class="bg-gradient-to-br from-slate-900 to-slate-800 p-6 sm:p-8 lg:p-10 rounded-[2rem] sm:rounded-[2.5rem] text-white shadow-2xl relative overflow-hidden">
                 <div class="relative z-10">
                     <h3 class="text-xl font-black uppercase tracking-tight mb-6">Tips <span class="text-primary-500">Kustomisasi</span></h3>
                     <ul class="space-y-4">
