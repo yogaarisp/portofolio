@@ -19,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        view()->composer('*', function ($view) {
+            $view->with('settings', \App\Models\Setting::all()->pluck('value', 'key')->toArray());
+        });
     }
 }

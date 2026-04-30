@@ -9,25 +9,33 @@
         {{-- Desktop Nav --}}
         <nav style="display:none;gap:2rem;align-items:center;" id="desktop-nav" class="md-nav">
             @foreach(['hero'=>'Home','skills'=>'Skills','experience'=>'Experience','portfolio'=>'Portfolio'] as $id => $label)
-            <a href="#{{ $id }}" class="desk-nav-link" data-target="{{ $id }}">{{ $label }}</a>
+            <a href="#{{ $id }}" class="desk-nav-link" data-target="{{ $id }}">{{ __($label) }}</a>
             @endforeach
         </nav>
         
-        {{-- Hire Me button --}}
-        <a href="#contact" style="background:#0f172a;color:#fff;font-weight:600;font-size:0.9rem;padding:0.6rem 1.5rem;border-radius:9999px;text-decoration:none;white-space:nowrap;transition:all 0.2s;flex-shrink:0;" onmouseover="this.style.background='#1e293b';this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.background='#0f172a';this.style.transform='none';this.style.boxShadow='none'" class="hire-btn">
-            Hire Me
-        </a>
-        
-        {{-- Mobile hamburger --}}
-        <button id="mob-toggle" style="display:flex;padding:0.4rem;color:#64748b;background:none;border:none;cursor:pointer;" class="mob-only">
-            <svg style="width:26px;height:26px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
-        </button>
+        <div style="display:flex;align-items:center;gap:1rem;">
+            {{-- Language Switcher --}}
+            <a href="{{ url('lang/'.(app()->getLocale() == 'id' ? 'en' : 'id')) }}" style="display:flex;align-items:center;gap:0.3rem;font-weight:700;font-size:0.9rem;color:#64748b;text-decoration:none;padding:0.4rem 0.8rem;border-radius:9999px;background:#f1f5f9;transition:all 0.2s;" onmouseover="this.style.background='#e2e8f0';this.style.color='#0d9488'" onmouseout="this.style.background='#f1f5f9';this.style.color='#64748b'">
+                <span class="material-symbols-outlined" style="font-size:1.1rem;">language</span>
+                {{ app()->getLocale() == 'id' ? 'EN' : 'ID' }}
+            </a>
+
+            {{-- Hire Me button --}}
+            <a href="#contact" style="background:#0f172a;color:#fff;font-weight:600;font-size:0.9rem;padding:0.6rem 1.5rem;border-radius:9999px;text-decoration:none;white-space:nowrap;transition:all 0.2s;flex-shrink:0;" onmouseover="this.style.background='#1e293b';this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.background='#0f172a';this.style.transform='none';this.style.boxShadow='none'" class="hire-btn">
+                {{ __('Hire Me') }}
+            </a>
+            
+            {{-- Mobile hamburger --}}
+            <button id="mob-toggle" style="display:flex;padding:0.4rem;color:#64748b;background:none;border:none;cursor:pointer;" class="mob-only">
+                <svg style="width:26px;height:26px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+        </div>
     </div>
     
     {{-- Mobile menu --}}
     <div id="mob-menu" style="display:none;flex-direction:column;gap:0.5rem;padding:0.75rem 2rem 1.25rem;border-top:1px solid #e2e8f0;background:#fff;">
         @foreach(['hero'=>'Home','skills'=>'Skills','experience'=>'Experience','portfolio'=>'Portfolio','contact'=>'Contact'] as $id => $label)
-        <a href="#{{ $id }}" class="mob-nav-link" data-target="{{ $id }}">{{ $label }}</a>
+        <a href="#{{ $id }}" class="mob-nav-link" data-target="{{ $id }}">{{ __($label) }}</a>
         @endforeach
     </div>
 </header>
