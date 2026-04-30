@@ -172,7 +172,7 @@
                         style="padding:1.5rem 1.75rem;cursor:pointer;transition:all 0.3s ease;" 
                         onmouseover="this.style.borderColor='#0d9488';this.style.transform='translateX(5px)'" 
                         onmouseout="this.style.borderColor='#f1f5f9';this.style.transform='none'"
-                        @click="openExp('{{ __($exp->title) }}', '{{ $exp->company }}', '{{ __($exp->period) }}', '{{ __($exp->description) }}', {!! json_encode(array_map(function($r) { return __($r); }, $exp->responsibilities ?? [])) !!})">
+                        @click="openExp({{ Js::from(__($exp->title)) }}, {{ Js::from($exp->company) }}, {{ Js::from(__($exp->period)) }}, {{ Js::from(__($exp->description)) }}, {{ Js::from(array_map(function($r) { return __($r); }, $exp->responsibilities ?? [])) }})">
                         <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:0.75rem;margin-bottom:0.6rem;">
                             <div>
                                 @if($exp->is_leadership)
