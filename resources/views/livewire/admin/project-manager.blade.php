@@ -24,7 +24,7 @@
     @endif
 
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-8">
-        @foreach($projects as $project)
+        @foreach($this->projects as $project)
         <div class="bg-white rounded-[2rem] sm:rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col group hover:shadow-2xl hover:shadow-slate-200/50 transition-all duration-500">
             <div class="h-48 relative overflow-hidden" style="background: {{ $project->gradient }}">
                 <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500"></div>

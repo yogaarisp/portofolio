@@ -4,7 +4,7 @@
 <x-navbar />
 
 {{-- HERO --}}
-<section id="hero" style="padding:2.5rem 0 3rem;background:#f5faf8;min-height:calc(100vh - 80px);display:flex;align-items:flex-start;">
+<section id="hero" class="hero-section" style="padding:2.5rem 0 3rem;background:#f5faf8;min-height:calc(100vh - 80px);display:flex;align-items:flex-start;">
     <div style="max-width:1200px;margin:0 auto;padding:0 2rem;width:100%;">
         <div class="hero-grid" style="display:grid;grid-template-columns:1fr;gap:3rem;align-items:center;">
 
@@ -98,6 +98,10 @@
 <style>
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.6;transform:scale(1.2)}}
 @media(min-width:900px){
+    .hero-section{
+        min-height:auto!important;
+        padding-bottom:2.5rem!important;
+    }
     .hero-grid{grid-template-columns:1fr 1fr!important;gap:4rem!important;}
     .hero-text{order:1!important;}
     .hero-text h1{white-space:nowrap!important;}

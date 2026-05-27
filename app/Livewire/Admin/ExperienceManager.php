@@ -110,6 +110,14 @@ class ExperienceManager extends Component
         session()->flash('message', 'Pengalaman dihapus!');
     }
 
+    public function updateOrder($items)
+    {
+        foreach ($items as $item) {
+            Experience::where('id', $item['value'])->update(['sort_order' => $item['order']]);
+        }
+        session()->flash('message', 'Urutan berhasil diperbarui!');
+    }
+
     public function render()
     {
         return view('livewire.admin.experience-manager');

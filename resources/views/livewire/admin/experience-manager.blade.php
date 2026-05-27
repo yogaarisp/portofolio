@@ -34,11 +34,26 @@
                         <th class="px-10 py-6 text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.2em]">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-50">
-                    @foreach($experiences as $exp)
-                    <tr class="group hover:bg-slate-50/50 transition-colors">
+                <tbody class="divide-y divide-slate-50" x-data x-init="
+                    Sortable.create($el, {
+                        animation: 150,
+                        handle: '.sortable-handle',
+                        onEnd: function () {
+                            let items = [];
+                            $el.querySelectorAll('tr[data-id]').forEach((row, index) => {
+                                items.push({ value: row.dataset.id, order: index + 1 });
+                            });
+                            $wire.updateOrder(items);
+                        }
+                    })
+                ">
+                    @foreach($this->experiences as $exp)
+                    <tr data-id="{{ $exp->id }}" wire:key="exp-{{ $exp->id }}" class="group hover:bg-slate-50/50 transition-colors">
                         <td class="px-10 py-8">
                             <div class="flex items-center gap-4">
+                                <div class="sortable-handle cursor-grab active:cursor-grabbing w-8 h-8 rounded-xl bg-slate-50 text-slate-300 flex items-center justify-center hover:bg-primary-50 hover:text-primary-600 transition-colors flex-shrink-0">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 8h16M4 16h16"/></svg>
+                                </div>
                                 <div class="w-3 h-3 rounded-full flex-shrink-0" style="background: {{ $exp->dot_color }}; box-shadow: 0 0 0 4px {{ $exp->dot_color }}20;"></div>
                                 <div>
                                     <p class="font-black text-slate-900 text-sm tracking-tight leading-none mb-1 group-hover:text-primary-600 transition-colors">{{ $exp->title }}</p>
@@ -76,12 +91,27 @@
         </div>
     </div>
 
-    <div class="md:hidden space-y-4">
-        @foreach($experiences as $exp)
-            <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-5 space-y-4">
+    <div class="md:hidden space-y-4" x-data x-init="
+        Sortable.create($el, {
+            animation: 150,
+            handle: '.sortable-handle',
+            onEnd: function () {
+                let items = [];
+                $el.querySelectorAll('div[data-id]').forEach((row, index) => {
+                    items.push({ value: row.dataset.id, order: index + 1 });
+                });
+                $wire.updateOrder(items);
+            }
+        })
+    ">
+        @foreach($this->experiences as $exp)
+            <div data-id="{{ $exp->id }}" wire:key="exp-mobile-{{ $exp->id }}" class="bg-white rounded-3xl border border-slate-100 shadow-sm p-5 space-y-4">
                 <div class="flex items-start justify-between gap-3">
                     <div class="min-w-0">
                         <div class="flex items-center gap-3">
+                            <div class="sortable-handle cursor-grab active:cursor-grabbing text-slate-300 hover:text-primary-600 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 8h16M4 16h16"/></svg>
+                            </div>
                             <div class="w-3 h-3 rounded-full flex-shrink-0" style="background: {{ $exp->dot_color }}; box-shadow: 0 0 0 4px {{ $exp->dot_color }}20;"></div>
                             <p class="font-black text-slate-900 text-sm tracking-tight truncate">{{ $exp->title }}</p>
                         </div>

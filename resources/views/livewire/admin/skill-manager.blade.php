@@ -25,7 +25,7 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         @php $currentCategory = ''; @endphp
-        @foreach($skills as $skill)
+        @foreach($this->skills as $skill)
             @if($currentCategory !== $skill->category)
                 @php $currentCategory = $skill->category; @endphp
                 <div class="col-span-1 md:col-span-2 xl:col-span-3 pt-10 first:pt-2">
@@ -97,7 +97,7 @@
                                 <div class="relative">
                                     <input type="text" wire:model="category" list="categories" class="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold text-slate-700 focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 focus:bg-white transition-all outline-none" placeholder="Pilih atau Ketik Kategori">
                                     <datalist id="categories">
-                                        @foreach($categories as $cat)
+                                        @foreach($this->categories as $cat)
                                             <option value="{{ $cat }}">
                                         @endforeach
                                     </datalist>
@@ -147,5 +147,4 @@
             </div>
         </div>
     </div>
-</div>
 </div>

@@ -150,8 +150,8 @@
                     <div class="space-y-2">
                         <label class="text-xs font-semibold text-on-surface-variant block ml-1 uppercase tracking-wider">Email Address</label>
                         <div class="relative">
-                            <span class="absolute left-4 top-1/2 -translate-y-[42%] text-slate-500 pointer-events-none">
-                                <svg class="w-[22px] h-[22px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <span class="absolute left-4 top-1/2 -translate-y-[48%] text-slate-500 pointer-events-none">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7l9 6 9-6m-18 0h18v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
                                 </svg>
                             </span>
@@ -170,8 +170,8 @@
                             <a class="text-xs font-bold text-primary hover:underline transition-all" href="#">Forgot Password?</a>
                         </div>
                         <div class="relative">
-                            <span class="absolute left-4 top-1/2 -translate-y-[42%] text-slate-500 pointer-events-none">
-                                <svg class="w-[22px] h-[22px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <span class="absolute left-4 top-1/2 -translate-y-[48%] text-slate-500 pointer-events-none">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10V7a4 4 0 118 0v3m-9 0h10a2 2 0 012 2v7a2 2 0 01-2 2H7a2 2 0 01-2-2v-7a2 2 0 012-2z" />
                                 </svg>
                             </span>
