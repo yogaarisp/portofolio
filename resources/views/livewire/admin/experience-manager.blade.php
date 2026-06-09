@@ -213,19 +213,22 @@
                             <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest px-1">Poin Tanggung Jawab (Key Responsibilities)</label>
                             <div class="space-y-3">
                                 @foreach($responsibilities as $index => $r)
-                                <div class="flex items-center gap-3 animate-fade-in group/row">
+                                <div class="flex items-center gap-3 animate-fade-in group/row" wire:key="resp-{{ $index }}">
                                     <div class="w-10 h-10 rounded-xl bg-slate-50 text-slate-300 flex items-center justify-center font-bold text-xs">{{ $index + 1 }}</div>
                                     <input type="text" wire:model="responsibilities.{{ $index }}" class="flex-1 bg-white border border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold text-slate-700 outline-none focus:border-primary-500 transition-all shadow-sm">
-                                    <button type="button" wire:click="$set('responsibilities', {{ json_encode(array_values(array_filter($responsibilities, function($k) use ($index) { return $k != $index; }, ARRAY_FILTER_USE_KEY))) }})" class="p-4 rounded-xl text-slate-300 hover:bg-rose-50 hover:text-rose-500 transition-all">
+                                    <button type="button" wire:click="removeResponsibility({{ $index }})" class="p-4 rounded-xl text-slate-300 hover:bg-rose-50 hover:text-rose-500 transition-all">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
                                     </button>
                                 </div>
                                 @endforeach
-                                <div class="flex items-center gap-3">
+                                <div class="flex items-center gap-3" x-data="{ newResp: '' }">
                                     <div class="w-10 h-10 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"/></svg>
                                     </div>
-                                    <input type="text" x-model="responsibility" @keydown.enter.prevent="if(responsibility.trim() != '') { $wire.set('responsibilities', [...$wire.get('responsibilities'), responsibility]); responsibility = ''; }" class="flex-1 bg-slate-50 border border-slate-100 border-dashed rounded-2xl px-6 py-4 text-sm font-bold text-slate-400 placeholder-slate-300 outline-none focus:border-primary-500 focus:bg-white transition-all" placeholder="Tambah poin tanggung jawab baru (Tekan Enter)...">
+                                    <input type="text" x-model="newResp" @keydown.enter.prevent="if(newResp.trim() !== '') { $wire.addResponsibility(newResp); newResp = ''; }" class="flex-1 bg-slate-50 border border-slate-100 border-dashed rounded-2xl px-6 py-4 text-sm font-bold text-slate-400 placeholder-slate-300 outline-none focus:border-primary-500 focus:bg-white transition-all" placeholder="Tambah poin tanggung jawab baru (Tekan Enter)...">
+                                    <button type="button" @click="if(newResp.trim() !== '') { $wire.addResponsibility(newResp); newResp = ''; }" class="p-4 rounded-xl text-primary-400 hover:bg-primary-50 hover:text-primary-600 transition-all">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                                    </button>
                                 </div>
                             </div>
                         </div>

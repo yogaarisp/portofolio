@@ -104,6 +104,19 @@ class ExperienceManager extends Component
         session()->flash('message', $this->isEditing ? 'Pengalaman diperbarui!' : 'Pengalaman ditambahkan!');
     }
 
+    public function addResponsibility($text)
+    {
+        if (trim($text) !== '') {
+            $this->responsibilities[] = $text;
+        }
+    }
+
+    public function removeResponsibility($index)
+    {
+        unset($this->responsibilities[$index]);
+        $this->responsibilities = array_values($this->responsibilities);
+    }
+
     public function delete($id)
     {
         Experience::findOrFail($id)->delete();
