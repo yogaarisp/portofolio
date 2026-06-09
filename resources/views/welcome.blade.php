@@ -52,10 +52,17 @@
                         {{ __('View Projects') }}
                         <svg style="width:15px;height:15px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
                     </a>
-                    <a href="#" style="display:inline-flex;align-items:center;gap:0.5rem;background:#fff;color:#334155;font-weight:700;font-size:0.95rem;padding:0.85rem 1.75rem;border-radius:9999px;text-decoration:none;border:2px solid #e2e8f0;transition:border-color 0.2s,color 0.2s,transform 0.2s;" onmouseover="this.style.borderColor='#0d9488';this.style.color='#0d9488';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='#e2e8f0';this.style.color='#334155';this.style.transform='none'">
+                    @if(!empty($settings['cv_file_path']) && Storage::disk('public')->exists($settings['cv_file_path']))
+                    <a href="{{ Storage::url($settings['cv_file_path']) }}" download target="_blank" style="display:inline-flex;align-items:center;gap:0.5rem;background:#fff;color:#334155;font-weight:700;font-size:0.95rem;padding:0.85rem 1.75rem;border-radius:9999px;text-decoration:none;border:2px solid #e2e8f0;transition:border-color 0.2s,color 0.2s,transform 0.2s;" onmouseover="this.style.borderColor='#0d9488';this.style.color='#0d9488';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='#e2e8f0';this.style.color='#334155';this.style.transform='none'">
                         {{ __('Download CV') }}
                         <svg style="width:15px;height:15px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
                     </a>
+                    @else
+                    <a href="#" onclick="event.preventDefault();" style="display:inline-flex;align-items:center;gap:0.5rem;background:#f8fafc;color:#94a3b8;font-weight:700;font-size:0.95rem;padding:0.85rem 1.75rem;border-radius:9999px;text-decoration:none;border:2px solid #f1f5f9;cursor:not-allowed;">
+                        {{ __('Download CV') }}
+                        <svg style="width:15px;height:15px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+                    </a>
+                    @endif
                 </div>
 
                 {{-- Stats --}}

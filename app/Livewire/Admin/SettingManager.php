@@ -5,6 +5,7 @@ namespace App\Livewire\Admin;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\Setting;
+use Illuminate\Support\Facades\Storage;
 
 class SettingManager extends Component
 {
@@ -13,8 +14,8 @@ class SettingManager extends Component
     public $settings = [];
     public $site_name, $contact_email, $linkedin_url, $github_url, $whatsapp_number, $hero_title, $hero_subtitle;
     public $years_experience, $projects_count, $client_satisfaction;
-    public $hero_image, $favicon;
-    public $hero_image_path, $favicon_path;
+    public $hero_image, $favicon, $cv_file;
+    public $hero_image_path, $favicon_path, $cv_file_path;
 
     protected $rules = [
         'site_name' => 'required|string|max:255',
@@ -29,6 +30,7 @@ class SettingManager extends Component
         'client_satisfaction' => 'nullable|string',
         'hero_image' => 'nullable|image|max:2048',
         'favicon' => 'nullable|image|max:1024',
+        'cv_file' => 'nullable|mimes:pdf|max:5120',
     ];
 
     public function mount()
@@ -52,6 +54,7 @@ class SettingManager extends Component
         $this->client_satisfaction = $dbSettings['client_satisfaction'] ?? '100%';
         $this->hero_image_path = $dbSettings['hero_image_path'] ?? '';
         $this->favicon_path = $dbSettings['favicon_path'] ?? '';
+        $this->cv_file_path = $dbSettings['cv_file_path'] ?? '';
     }
 
     public function save()
@@ -77,6 +80,13 @@ class SettingManager extends Component
 
         if ($this->favicon) {
             $data['favicon_path'] = $this->favicon->store('settings', 'public');
+            $this->favicon_path = $data['favicon_path'];
+        }
+
+        if ($this->cv_file) {
+            $data['cv_file_path'] = $this->cv_file->storeAs('cv', 'cv.pdf', 'public');
+            $this->cv_file_path = $data['cv_file_path'];
+            $this->cv_file = null;
         }
 
         $upsertData = [];
@@ -87,6 +97,19 @@ class SettingManager extends Component
         Setting::upsert($upsertData, ['key'], ['value']);
 
         session()->flash('message', 'Pengaturan berhasil disimpan!');
+    }
+
+    public function deleteCV()
+    {
+        if ($this->cv_file_path && Storage::disk('public')->exists($this->cv_file_path)) {
+            Storage::disk('public')->delete($this->cv_file_path);
+        }
+        
+        Setting::where('key', 'cv_file_path')->delete();
+        $this->cv_file_path = '';
+        $this->cv_file = null;
+        
+        session()->flash('message', 'CV berhasil dihapus!');
     }
 
     public function render()

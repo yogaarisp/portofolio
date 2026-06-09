@@ -100,6 +100,62 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Dokumen CV -->
+            <div class="bg-white p-5 sm:p-8 lg:p-10 rounded-[2rem] sm:rounded-[2.5rem] border border-slate-100 shadow-sm space-y-8 mt-6 sm:mt-10">
+                <div class="flex items-center gap-4 mb-2">
+                    <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    </div>
+                    <h3 class="font-black text-slate-900 uppercase tracking-tight">Dokumen <span class="text-primary-600">CV</span></h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-4">
+                        <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest px-1">Upload File PDF</label>
+                        <div class="relative group">
+                            <div class="w-full h-32 rounded-3xl bg-slate-50 border-2 border-dashed border-slate-200 flex flex-col items-center justify-center overflow-hidden transition-all group-hover:border-primary-300">
+                                @if ($cv_file)
+                                    <svg class="w-8 h-8 text-emerald-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                    <p class="text-[0.6rem] font-bold text-emerald-600 uppercase tracking-widest">File Terpilih</p>
+                                @else
+                                    <svg class="w-8 h-8 text-slate-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                                    <p class="text-[0.6rem] font-bold text-slate-400 uppercase tracking-widest">Pilih File CV (PDF)</p>
+                                @endif
+                                <input type="file" wire:model="cv_file" accept="application/pdf" class="absolute inset-0 opacity-0 cursor-pointer">
+                            </div>
+                            <div wire:loading wire:target="cv_file" class="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center rounded-3xl">
+                                <svg class="animate-spin h-5 w-5 text-primary-600" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                            </div>
+                        </div>
+                        @error('cv_file') <span class="text-xs text-rose-500 font-bold mt-1 block px-2">{{ $message }}</span> @enderror
+                        <p class="text-[0.6rem] text-slate-400 font-medium px-2 italic">* Format: PDF, Maksimal 5MB</p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest px-1">Status CV Saat Ini</label>
+                        <div class="w-full h-32 rounded-3xl border-2 border-slate-100 flex flex-col items-center justify-center p-4">
+                            @if ($cv_file_path && Storage::disk('public')->exists($cv_file_path))
+                                <div class="text-center flex flex-col items-center">
+                                    <span class="inline-flex items-center gap-1.5 py-1.5 px-3.5 rounded-full text-[0.7rem] font-black uppercase tracking-widest bg-emerald-50 text-emerald-600 mb-3">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> CV Sudah Diupload
+                                    </span>
+                                    <div class="flex items-center justify-center gap-3 mt-1">
+                                        <a href="{{ Storage::url($cv_file_path) }}" target="_blank" class="text-[0.65rem] font-black uppercase tracking-widest text-primary-600 bg-primary-50 hover:bg-primary-100 px-4 py-2 rounded-xl transition-colors">Lihat</a>
+                                        <button type="button" wire:click="deleteCV" wire:confirm="Yakin ingin menghapus CV ini?" class="text-[0.65rem] font-black uppercase tracking-widest text-rose-600 bg-rose-50 hover:bg-rose-100 px-4 py-2 rounded-xl transition-colors">Hapus</button>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="text-center flex flex-col items-center">
+                                    <span class="inline-flex items-center gap-1.5 py-1.5 px-3.5 rounded-full text-[0.7rem] font-black uppercase tracking-widest bg-slate-100 text-slate-500">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Belum ada CV
+                                    </span>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
             <!-- Media & Assets -->
